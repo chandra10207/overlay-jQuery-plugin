@@ -30,7 +30,7 @@
 		first.append(overlay);
 		return {
 			get:function(){return overlay[0];},
-			destroy:function(){overlay.remove();}
+			destroy:function(){return overlay.remove()[0];}
 		};
 	}
 }(jQuery))
