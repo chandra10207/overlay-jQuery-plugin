@@ -49,7 +49,12 @@ jQuery plugin for creating an overlay which covers the whole page or only part o
 	</ul>
 </p>
 <strong>Notice:</strong>
-<p>
-	No matter how many DOM elements are contained in the jQuery object used to invoke this plugin,
-	only the first one is processed.
-</p>
+<ul>
+	<li>
+		No matter how many DOM elements are contained in the jQuery object used to invoke this plugin,
+		only the first one is processed.		
+	</li>
+	<li>
+		Currently I use the <code>resize</code> event to keep non-full-screen overlay stick to the target element, due to different behavior for this event, the plugin may work differently.
+	</li>
+</ul>
