@@ -1,3 +1,7 @@
+## Overlay
+
+jQuery plugin for creating an overlay which covers the whole page or only part of the page
+
 <strong>Usage:</strong>
 <p>
 	<pre>
