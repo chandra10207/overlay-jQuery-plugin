@@ -3,12 +3,10 @@
 jQuery plugin for creating an overlay which covers the whole page or only part of the page
 
 <strong>Usage:</strong>
-<p>
-	<pre>
-		$("body").overlay();//for full screen
-		$("div.player").overlay();//shadows only this element
-	</pre>
-</p>
+
+>		$("body").overlay();//for full screen
+>		$("div.player").overlay();//shadows only this element
+
 <strong>Options:</strong>
 <p>
 	<ul>
@@ -40,7 +38,7 @@ jQuery plugin for creating an overlay which covers the whole page or only part o
 	<ul>
 		<li>
 			<b>get:</b>
-			<p>Return the overlay element created on the fly. It is an plain DOM element, not a jQuery object.</p>
+			<p>Return the overlay element created on the fly. It is a plain DOM element, not a jQuery object.</p>
 		</li>
 		<li>
 			<b>destroy:</b>
@@ -48,7 +46,7 @@ jQuery plugin for creating an overlay which covers the whole page or only part o
 		</li>
 	</ul>
 </p>
-<strong>Notice:</strong>
+**Notice:**
 <ul>
 	<li>
 		No matter how many DOM elements are contained in the jQuery object used to invoke this plugin,
