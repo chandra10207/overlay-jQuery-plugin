@@ -27,6 +27,14 @@ jQuery plugin for creating an overlay which covers the whole page or only part o
 				The opacity for the overlay, defaults to 0.5
 			</p>
 		</li>
+		<li>
+			<b>styleClass</b>
+			<p>
+				Customizable class to be applied to the newly created element.<br/>
+				If this option is specified, the opacity, color and zindex options will be ignored, you have to adjust them yourself.<br/>
+				By default, I will zero out the margin/padding/border of the overlay element to suppress styles unintentionally applied to it. These will **not** be done when styleClass option is specified.
+			</p>
+		</li>
 	</ul>
 </p>
 <strong>Return Value:</strong>
