@@ -47,13 +47,24 @@
 		//should explicitly use the outerWidth/Height of document element
 		var width = isBody ? $(document).outerWidth() : first.outerWidth();
 		var height = isBody ? $(document).outerHeight() : first.outerHeight();
-		overlay.css("background-color",option['color'] || '#222')
-				.attr("z-index",option['zindex'] || '1')
-				.css("opacity",option['opacity'] || '0.5')
-				.css("margin","0")
-				.css("padding","0")
-				.css("border","none")
-				.css("position","absolute")
+		//customized class
+		var styleClass = option['styleClass'];
+		var opacity = +option['opacity'] || '0.5';
+		if( ! styleClass){
+			overlay.css("background-color",option['color'] || '#222')
+					.attr("z-index",option['zindex'] || '1')
+					.css("opacity", +option['opacity'] || opacity)
+					//compatibility for IE8(Q)
+					.css("-ms-filter","progid:DXImageTransform.Microsoft.Alpha(Opacity="+opacity*100+")")
+					//compatibility for IE5-7
+					.css("filter","alpha(opacity="+opacity*100+")")
+					.css("margin","0")
+					.css("padding","0")
+					.css("border","none");
+		}else{
+			overlay.toggleClass(styleClass);
+		}
+		overlay.css("position","absolute")
 				.css("width",width)
 				.css("height",height);
 		// The top and left offset cannot be set once and for ever,
