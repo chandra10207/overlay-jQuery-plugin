@@ -1,87 +1,125 @@
 (function($) {
+	
+	var _default = {
+		opacity:0.5,
+		color:'#222',
+		zindex:1,
+		styleClass:''//no default
+	};
+	
+	var _elements = [];
+	var _targets = [];
+	
+	var actions = {
+		destroy:function(elem){
+			if(!elem){
+				destroyAll();
+				return;
+			}
+			var idx;
+			if((idx=$.inArray(elem,_elements))===-1){
+				return;
+			}
+			_elements[idx]=undefined;
+			_targets[idx].overlay.remove();
+			_targets[idx]=undefined;
+		},
+		setdefault:function(op){
+			$.extend(_default,op);
+		}
+	};
+	
+	function destroyAll(){
+		while(_elements.length){
+			_elements.pop();
+		}
+		while(_targets.length){
+			var ele = _targets.pop();
+			ele.overlay.remove();
+		}
+	}
+	
 	$.fn.overlay=function(option){
-		option = option || {};
+		if(typeof option === 'string'){
+			actions[option]([].slice.call(arguments,1)[0]);
+			return;
+		}
 		if(!this.length){
 			return this;
 		}
-		var first = this.eq(0);
-		var isBody = this[0] === document.body || this[0] === document.documentElement;
-		var overlay = $("<div>");
 		
-		var pos;
+		option = $.extend($.extend({},_default),option);
 		
-		//if a full-screen overlay is required, we shall not retrieve the top and left value 
-		//of html/body but directly zero them out.
-		if(isBody){
-			pos = function(){
-				return {top:0,left:0};
+		this.each(function(i,e){
+			
+			if($.inArray(this,_elements)!==-1){
+				return;
 			}
-		}else{
-			// Under Chrome, the position() method (in fact, the left property) does not work properly.
-			// Chrome will treat horizontally centered div tags (being applied {margin:0} or {margin:0 auto} style)
-			// as still stretching to full width of the page when calculating the left offset.
-			// Thus the value returned from position().left is only the gap between <html> and <body>
-			// In this case, we have to check the left offset ourselves.
-			if(navigator.userAgent.indexOf('WebKit')!==-1){
-				pos = function(){
-					return {
-						left: getComputedStyle(first[0]).marginLeft + 
-						($(document.documentElement).innerWidth() - $(document.body).innerWidth())/2,
-						top: first.position().top
-					};
-				}
+			
+			var self;
+			if(this === document.body){
+				self = $(document.documentElement);
 			}else{
-				pos = function(){
-					if(first.css("position")==="relative"){
-						return {
-							top:0,
-							left:0
-						}
-					}else{
-						return first.position();
-					}
-				};
+				var self = $(this);
 			}
-		}
-		//100% is not enough for full-screen overlay,
-		//should explicitly use the outerWidth/Height of document element
-		var width = isBody ? $(document).outerWidth() : first.outerWidth();
-		var height = isBody ? $(document).outerHeight() : first.outerHeight();
-		//customized class
-		var styleClass = option['styleClass'];
-		var opacity = +option['opacity'] || '0.5';
-		if( ! styleClass){
-			overlay.css("background-color",option['color'] || '#222')
-					.attr("z-index",option['zindex'] || '1')
-					.css("opacity", +option['opacity'] || opacity)
-					//compatibility for IE8(Q)
-					.css("-ms-filter","progid:DXImageTransform.Microsoft.Alpha(Opacity="+opacity*100+")")
-					//compatibility for IE5-7
-					.css("filter","alpha(opacity="+opacity*100+")")
-					.css("margin","0")
-					.css("padding","0")
-					.css("border","none");
-		}else{
-			overlay.toggleClass(styleClass);
-		}
-		overlay.css("position","absolute")
-				.css("width",width)
-				.css("height",height);
-		// The top and left offset cannot be set once and for ever,
-		// If we are not creating a full screen overlay, the position of the overlay
-		// must be adjusted dynamically according to current size of the window
-		$(window).resize(function(){
-			var tmp = pos();
-			overlay.css("top",tmp.top)
-				.css("left",tmp.left);
+			
+			var overlay = $("<div>");
+			
+			if( ! option['styleClass']){
+				overlay.css("background-color",option['color'])
+				.attr("z-index",option['zindex'])
+				.css("opacity", +option['opacity'])
+				//compatibility for IE8(Q)
+				.css("-ms-filter","progid:DXImageTransform.Microsoft.Alpha(Opacity="+(+option['opacity'])*100+")")
+				//compatibility for IE5-7
+				.css("filter","alpha(opacity="+(+option['opacity'])*100+")")
+				.css("margin","0")
+				.css("padding","0")
+				.css("border","none");
+			}else{
+				overlay.toggleClass(option['styleClass']);
+			}
+			
+			if(self.css("position")==='fixed'){
+				overlay.css("position","fixed");
+			}else{
+				overlay.css("position","absolute");
+			}
+			
+			overlay//test
+					.html(self.text())
+					.css("font-size","70px")
+					.css("font-weight","800");
+					//test
+			
+			$("body").append(overlay);
+			
+			_elements.push(self.get(0));
+			
+			_targets.push({
+				self:self,
+				overlay:overlay
+			});
 		});
-		first.append(overlay);
+		
+		$(window).resize(function(){
+			$.each(_targets,function(i,e){
+				if(!e){
+					return;
+				}
+				e.overlay.css("width", e.self.outerWidth())
+							.css("height",e.self.outerHeight());
+				if(e.self.css("position")==='fixed'){
+					var box = e.self.get(0).getBoundingClientRect();
+					e.overlay.css("top",box.top).css("left",box.left);
+				}else{
+					var tmp = e.self.offset();
+					e.overlay.css("top",tmp.top).css("left",tmp.left);
+				}
+			});
+		});
 		
 		$(window).resize(); //trigger the initial positioning
-		
-		return {
-			get:function(){return overlay[0];},
-			destroy:function(){return overlay.remove()[0];}
-		};
+		return this;
 	}
 }(jQuery))
