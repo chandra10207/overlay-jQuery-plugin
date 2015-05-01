@@ -12,37 +12,21 @@
     //this array is only a cache for speeding up destroying overlay
 	var _elements = [];
 
-    //pair of overlay element and the underlying element,
-    //both are jQuery objects
+    //pairs of overlay element and the underlying DOM element,
+    //both are wrapped in jQuery object
 	var _targets = [];
 
-    //extra operations on created overlays
+    //extra operations
 	var actions = {
 
         /*
-         * destroy one or all overlays created.
-         * @elem the underlying DOM object or a set of jQuery objects, overlays on them will be
-         *  destroyed. If this parameter is not provided, all overlays created by this plugin will
-         *  be destroyed
+         * destroy a collection of overlays attached to the DOM elements
+         * wrapped by current jQuery object
          */
-		destroy:function des(elem){
-            if(elem.constructor === jQuery){
-                elem.each(function(i,e){
-                   des(e);
-                });
-                return;
-            }
-			if(!elem){
-				destroyAll();
-				return;
-			}
-			var idx;
-			if((idx=$.inArray(elem,_elements))===-1){
-				return;
-			}
-			_elements[idx]=undefined;
-			_targets[idx].overlay.remove();
-			_targets[idx]=undefined;
+		destroy:function(){
+            this.each(function(i,e){
+            	destroyOne(e);
+            });
 		},
 
         /*
@@ -52,32 +36,49 @@
          * */
 		setdefault:function(op){
 			$.extend(_default,op);
+		},
+		
+		/*
+		 * destroy all overlays created by this plugin
+		 */
+		destroyall:function(){
+			while(_elements.length){
+				_elements.pop();
+			}
+			while(_targets.length){
+				var ele = _targets.pop();
+				if(ele){
+					ele.overlay.remove();
+				}
+			}
 		}
 	};
-
-    /*utility function for destroy all overlays*/
-	function destroyAll(){
-		while(_elements.length){
-			_elements.pop();
-		}
-		while(_targets.length){
-			var ele = _targets.pop();
-			ele.overlay.remove();
-		}
-	}
 	
+	/*
+	 * destroy one overlay
+	 */
+	function destroyOne(elem){
+		var idx;
+		if((idx=$.inArray(elem,_elements))===-1){
+			return;
+		}
+		_elements[idx]=undefined;
+		_targets[idx].overlay.remove();
+		_targets[idx]=undefined;
+	}
+
 	$.fn.overlay=function(option){
 
-        //execute operations or just create an overlay
-		if(typeof option === 'string'){
-			actions[option]([].slice.call(arguments,1)[0]);
+        //call methods or create an overlay
+		if('string' === typeof option){
+			actions[option].call(this,[].slice.call(arguments,1)[0]);
 			return;
 		}
 		if(!this.length){
 			return this;
 		}
 		
-		$.extend({},_default,option);
+		option = $.extend({},_default,option);
 		
 		this.each(function(i,e){
 
@@ -127,22 +128,22 @@
 			});
 		});
 
-        //in the resize event listener
+        //within the resize event listener
         //we traverse the _targets array
-        //and adjust the overlay to make it sticking to the
-        //DOM element
+        //and adjust the overlay to keep it sticking to the
+        //underlying DOM element
 		$(window).resize(function(){
 			$.each(_targets,function(i,e){
-                //the array is sparse
+                //the array can be sparse
 				if(!e){
 					return;
 				}
 				e.overlay.css("width", e.self.outerWidth())
 							.css("height",e.self.outerHeight());
 
-                //when it comes to fixed-positioned element
-                //we shall use the BoundingClientRect function
-                //not offset() method from jQuery to retrieve the correct
+                //when it comes to fixed-positioned element,
+                //the BoundingClientRect() function shall be used 
+                //instead of the offset() method from jQuery to retrieve the correct
                 //top and left offset
 				if(e.self.css("position")==='fixed'){
 					var box = e.self.get(0).getBoundingClientRect();
