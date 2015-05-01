@@ -37,13 +37,26 @@ Returns the original set of jQuery objects.
 
 ###Additional Methods:
 
-call additional methods by calling ````$("any selector").overlay("method name",extraArgs)````. Type of the first argument decides whether to call additional methods or run the original overlay function:
+call additional methods by calling ````$("any selector").overlay("method name",extraArgs)````. Type of the first argument determines whether to call a methods or call the original overlay function:
 
 + **destroy**
 
-	pass a DOM element/ a jQuery object to this method. If the DOM element or DOM elements contained in the jQuery object is masked with an overlay before by this plugin, the overlay will be destroyed.
-	when called with no arguments, it will destroy all overlays.
+
+ destroy all overlays attached to the DOM elements wrapping in the current jQuery object.
+	
++ **destroyall**
+
+  destroy all overlays created by this plugin.
+ 
+  example:
+	````
+	$("div.div1,div.div2,div.div3").overlay();//create overlay for div1, div2 and div3
+	//do something else
+	$("div.div1,div.div3").overlay("destroy");//destroy overlay only for div1 and div3
+	$("").overlay("destroyall");//destroy all overlays, elements contained in the current jQuery object does not matter.
+	````
 	
 + **setdefault**
 
-	pass a plain object to override the default global settings for this plugin.
+  pass a plain object to override the default global settings for this plugin.
+
