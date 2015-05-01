@@ -1,11 +1,11 @@
 ## Overlay
 
-jQuery plugin for creating an overlay which masks the whole page or part of the page
+jQuery plugin for creating overlays which mask the whole page or specified elements.
 
 ###Usage:
 
 ````
-$("body").overlay();//for full screen
+$("html").overlay();//for full screen
 $("div.player1,div.player2").overlay();//shadows two elements
 ````
 
@@ -35,7 +35,7 @@ $("div.player1,div.player2").overlay();//shadows two elements
 
 Returns the original set of jQuery objects.
 
-###Additional Methods:
+###Methods:
 
 call additional methods by calling ````$("any selector").overlay("method name",extraArgs)````. Type of the first argument determines whether to call a methods or call the original overlay function:
 
@@ -60,3 +60,8 @@ call additional methods by calling ````$("any selector").overlay("method name",e
 
   pass a plain object to override the default global settings for this plugin.
 
+###Notice:
+
+  This plugin will create overlays for all DOM elements wrapped in the current jQuery object. Be sure to include only those you want to mask when invoking this plugin.
+  
+  use ````$("html").overlay()```` but not ````$("body").overlay()```` to correctly mask the whole page.
