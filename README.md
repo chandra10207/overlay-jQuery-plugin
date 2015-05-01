@@ -1,6 +1,6 @@
 ## Overlay
 
-jQuery plugin for creating an overlay which covers the whole page or only part of the it
+jQuery plugin for creating an overlay which masks the whole page or part of the page
 
 ###Usage:
 
@@ -50,9 +50,9 @@ call additional methods by calling ````$("any selector").overlay("method name",e
  
   example:
 	````
-	$("div.div1,div.div2,div.div3").overlay();//create overlay for div1, div2 and div3
+	$("div.div1,div.div2,div.div3").overlay();//create overlays for div1, div2 and div3
 	//do something else
-	$("div.div1,div.div3").overlay("destroy");//destroy overlay only for div1 and div3
+	$("div.div1,div.div3").overlay("destroy");//destroy overlays only for div1 and div3
 	$("").overlay("destroyall");//destroy all overlays, what is contained in the current jQuery object does not matter.
 	````
 	
