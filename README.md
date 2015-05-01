@@ -53,7 +53,7 @@ call additional methods by calling ````$("any selector").overlay("method name",e
 	$("div.div1,div.div2,div.div3").overlay();//create overlay for div1, div2 and div3
 	//do something else
 	$("div.div1,div.div3").overlay("destroy");//destroy overlay only for div1 and div3
-	$("").overlay("destroyall");//destroy all overlays, elements contained in the current jQuery object does not matter.
+	$("").overlay("destroyall");//destroy all overlays, what is contained in the current jQuery object does not matter.
 	````
 	
 + **setdefault**
