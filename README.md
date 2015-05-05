@@ -58,7 +58,17 @@ call additional methods by calling ````$("any selector").overlay("method name",e
 	
 + **setdefault**
 
-  pass a plain object to override the default global settings for this plugin.
+  pass plain objects to override the default global settings for this plugin.
+  
++ **get**
+
+  get the overlays created as jQuery object.
+  
+  if no additional arguments are provided, return the last set of overlays created.
+  
+  additional arguments can be selectors (string) or DOM elements. If underlying DOM elements indicated by them are masked by this plugin, the overlays will be collected as one jQuery object and returned.
+  
+  After invoking ````destroyall````, this method return an empty jQuery object.
 
 ###Notice:
 
